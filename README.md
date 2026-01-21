@@ -1,5 +1,5 @@
 # C++ CODES 
-1.  // Online C++ compiler to run C++ program online
+1.// Online C++ compiler to run C++ program online
 #include <iostream>
 using namespace std;
 int main()
@@ -17,6 +17,8 @@ int main()
     
     cout<< a;
     cout<<b;
+    cout<< "\n" << endl;
+    cout<<c;
     return 0;
     
-}
+} 
