@@ -109,7 +109,7 @@ Marks: 78
 -------------------
 ```
 
-# 3. Create a BankAccount class. Initialize account number and balance using a construcotr. Display a message when the destructor is called. Create objects inside a function to observe destructor behavior.
+# 3. Creating a BankAccount Class with Constructor and Destructor.
 ```cpp
 #include <iostream>
 using namespace std;
@@ -156,7 +156,18 @@ int main(){
     return 0;
 }
 ```
-# 4. Create an employee class. Make a salary private. Provide getter and setter functions. Add validation: salary cannot be negative
+INPUT/OUTPUT
+```
+Calling createAccounts function:
+Account 12345 created with balance $1000.00
+Account 67890 created with balance $2500.00
+Inside createAccounts function.
+Destructor called for account 67890
+Destructor called for account 12345
+Back in main. Program ending.
+```
+
+# 4. Creating an Employee class with private specifier and validation.
 ```cpp
 #include <iostream>
 using namespace std;
@@ -198,8 +209,22 @@ int main() {
 }
 
 ```
+INPUT/OUTPUT
+```
+Employee 1:
+Name: Alice
+Salary: $50000.00
 
-# 5. Create a class Calculator. Overload a function add() for : int, double, three integers.
+Employee 2:
+Name: Bob
+Salary: $0.00
+
+After updating Employee 2's salary:
+Name: Bob
+Salary: $45000.00
+```
+
+# 5. Creating a class Calculator and using method overloading.
 ```cpp
 #include <iostream>
 using namespace std;
@@ -242,4 +267,485 @@ int main() {
 
     return 0;
 }
+```
+INPUT/OUTPUT
+```
+Enter two integers: 3 5
+Sum (int): 8
+Enter two doubles: 2.2 4.3
+Sum (double): 6.5
+Enter three integers: 1 2 3
+Sum (three ints): 6
+```
+
+# 6. Student Class with Dynamic Subjects Array using Struct.
+```cpp
+#include <iostream>
+#include <string>
+
+struct Subject {
+    std::string name;
+    int marks;
+};
+
+class Student {
+private:
+    int roll;
+    std::string name;
+    Subject* subjects;
+    int n;
+
+public:
+    // Constructor: Allocates dynamic memory for n subjects
+    Student(int r, std::string nm, int num_subjects) : roll(r), name(nm), n(num_subjects) {
+        subjects = new Subject[n];
+    }
+
+    // Destructor: Frees dynamic memory for subjects
+    ~Student() {
+        delete[] subjects;
+    }
+
+    // Input function: Inputs details for each subject
+    void input() {
+        for (int i = 0; i < n; ++i) {
+            std::cout << "Enter subject " << (i + 1) << " name: ";
+            std::cin >> subjects[i].name;
+            std::cout << "Enter marks for " << subjects[i].name << ": ";
+            std::cin >> subjects[i].marks;
+        }
+    }
+
+    // Display function: Shows student and subject details
+    void display() const {
+        std::cout << "Roll: " << roll << std::endl;
+        std::cout << "Name: " << name << std::endl;
+        std::cout << "Subjects:" << std::endl;
+        for (int i = 0; i < n; ++i) {
+            std::cout << "  " << subjects[i].name << ": " << subjects[i].marks << std::endl;
+        }
+        std::cout << "Total Marks: " << total() << std::endl;
+        std::cout << "Grade: " << grade() << std::endl;
+        std::cout << "-------------------" << std::endl;
+    }
+
+    // Total function: Sums up marks
+    int total() const {
+        int sum = 0;
+        for (int i = 0; i < n; ++i) {
+            sum += subjects[i].marks;
+        }
+        return sum;
+    }
+
+    // Grade function: Assigns grade based on total (assuming max marks per subject is 100, total max is 100*n)
+    char grade() const {
+        int t = total();
+        int max_possible = 100 * n;
+        double percentage = (static_cast<double>(t) / max_possible) * 100;
+        if (percentage >= 90) return 'A';
+        else if (percentage >= 80) return 'B';
+        else if (percentage >= 70) return 'C';
+        else if (percentage >= 60) return 'D';
+        else return 'F';
+    }
+
+    // Getter for name (used for finding topper)
+    std::string getName() const { return name; }
+};
+
+int main() {
+    int N;
+    std::cout << "Enter number of students: ";
+    std::cin >> N;
+
+    // Dynamic array of student pointers
+    Student** students = new Student*[N];
+
+    for (int i = 0; i < N; ++i) {
+        int roll, n_subjects;
+        std::string name;
+        std::cout << "\nEnter details for Student " << (i + 1) << ":" << std::endl;
+        std::cout << "Roll: ";
+        std::cin >> roll;
+        std::cout << "Name: ";
+        std::cin >> name;
+        std::cout << "Number of subjects: ";
+        std::cin >> n_subjects;
+
+        students[i] = new Student(roll, name, n_subjects);
+        students[i]->input();
+    }
+
+    // Display all students
+    std::cout << "\nDisplaying all students:" << std::endl;
+    for (int i = 0; i < N; ++i) {
+        students[i]->display();
+    }
+
+    // Find topper (student with highest total marks)
+    int topper_index = 0;
+    int max_total = students[0]->total();
+    for (int i = 1; i < N; ++i) {
+        if (students[i]->total() > max_total) {
+            max_total = students[i]->total();
+            topper_index = i;
+        }
+    }
+    std::cout << "Topper: " << students[topper_index]->getName() << " with total marks " << max_total << std::endl;
+
+    // Free memory: Delete each student (destructor handles subjects), then the array
+    for (int i = 0; i < N; ++i) {
+        delete students[i];
+    }
+    delete[] students;
+
+    return 0;
+}
+```
+INPUT/OUTPUT
+```
+Enter number of students: 2
+
+Enter details for Student 1:
+Roll: 101
+Name: Alice
+Number of subjects: 2
+Enter subject 1 name: Math
+Enter marks for Math: 90
+Enter subject 2 name: Science
+Enter marks for Science: 85
+
+Enter details for Student 2:
+Roll: 102
+Name: Bob
+Number of subjects: 2
+Enter subject 1 name: Math
+Enter marks for Math: 80
+Enter subject 2 name: Science
+Enter marks for Science: 95
+
+Displaying all students:
+Roll: 101
+Name: Alice
+Subjects:
+  Math: 90
+  Science: 85
+Total Marks: 175
+Grade: A
+-------------------
+Roll: 102
+Name: Bob
+Subjects:
+  Math: 80
+  Science: 95
+Total Marks: 175
+Grade: A
+-------------------
+Topper: Alice with total marks 175
+```
+
+# PatientQueue Class with Priority Enqueue.
+```cpp
+#include <iostream>
+#include <string>
+
+struct Node {
+    int id;
+    std::string name;
+    int severity;
+    Node* next;
+};
+
+class PatientQueue {
+private:
+    Node* front;  // Points to the front of the queue (highest priority)
+
+public:
+    // Constructor
+    PatientQueue() : front(nullptr) {}
+
+    // Destructor: Frees all nodes
+    ~PatientQueue() {
+        while (front) {
+            dequeue();  // Dequeue will handle deletion
+        }
+    }
+
+    // Enqueue: Inserts based on severity (higher severity first)
+    void enqueue(int id, std::string name, int severity) {
+        Node* newNode = new Node{id, name, severity, nullptr};
+
+        if (!front || severity > front->severity) {
+            // Insert at front if higher severity or empty queue
+            newNode->next = front;
+            front = newNode;
+        } else {
+            // Find position to insert (after nodes with higher or equal severity)
+            Node* current = front;
+            while (current->next && current->next->severity >= severity) {
+                current = current->next;
+            }
+            newNode->next = current->next;
+            current->next = newNode;
+        }
+        std::cout << "Enqueued: " << name << " (ID: " << id << ", Severity: " << severity << ")" << std::endl;
+    }
+
+    // Dequeue: Removes and deletes the front node
+    void dequeue() {
+        if (!front) {
+            std::cout << "Queue is empty. Cannot dequeue." << std::endl;
+            return;
+        }
+        Node* temp = front;
+        front = front->next;
+        std::cout << "Dequeued: " << temp->name << " (ID: " << temp->id << ", Severity: " << temp->severity << ")" << std::endl;
+        delete temp;
+    }
+
+    // Display: Shows all patients in the queue
+    void display() const {
+        if (!front) {
+            std::cout << "Queue is empty." << std::endl;
+            return;
+        }
+        Node* current = front;
+        std::cout << "Patient Queue (from highest to lowest priority):" << std::endl;
+        while (current) {
+            std::cout << "ID: " << current->id << ", Name: " << current->name << ", Severity: " << current->severity << std::endl;
+            current = current->next;
+        }
+    }
+};
+
+int main() {
+    PatientQueue queue;
+
+    // Demonstrate enqueue
+    queue.enqueue(1, "Alice", 5);
+    queue.enqueue(2, "Bob", 3);
+    queue.enqueue(3, "Charlie", 7);  // Higher severity, should go to front
+    queue.enqueue(4, "Diana", 4);
+
+    std::cout << "\nAfter enqueues:" << std::endl;
+    queue.display();
+
+    // Demonstrate dequeue
+    std::cout << "\nDequeue operations:" << std::endl;
+    queue.dequeue();
+    queue.display();
+
+    queue.dequeue();
+    queue.display();
+
+    // Add more and dequeue
+    queue.enqueue(5, "Eve", 6);
+    std::cout << "\nAfter adding Eve:" << std::endl;
+    queue.display();
+
+    queue.dequeue();
+    queue.display();
+
+    // Destructor will clean up remaining nodes when queue goes out of scope
+    return 0;
+}
+```
+INPUT/OUTPUT
+```
+Enqueued: Alice (ID: 1, Severity: 5)
+Enqueued: Bob (ID: 2, Severity: 3)
+Enqueued: Charlie (ID: 3, Severity: 7)
+Enqueued: Diana (ID: 4, Severity: 4)
+
+After enqueues:
+Patient Queue (from highest to lowest priority):
+ID: 3, Name: Charlie, Severity: 7
+ID: 1, Name: Alice, Severity: 5
+ID: 4, Name: Diana, Severity: 4
+ID: 2, Name: Bob, Severity: 3
+
+Dequeue operations:
+Dequeued: Charlie (ID: 3, Severity: 7)
+Patient Queue (from highest to lowest priority):
+ID: 1, Name: Alice, Severity: 5
+ID: 4, Name: Diana, Severity: 4
+ID: 2, Name: Bob, Severity: 3
+
+Dequeued: Alice (ID: 1, Severity: 5)
+Patient Queue (from highest to lowest priority):
+ID: 4, Name: Diana, Severity: 4
+ID: 2, Name: Bob, Severity: 3
+
+After adding Eve:
+Patient Queue (from highest to lowest priority):
+ID: 5, Name: Eve, Severity: 6
+ID: 4, Name: Diana, Severity: 4
+ID: 2, Name: Bob, Severity: 3
+
+Dequeued: Eve (ID: 5, Severity: 6)
+Patient Queue (from highest to lowest priority):
+ID: 4, Name: Diana, Severity: 4
+ID: 2, Name: Bob, Severity: 3
+```
+
+# Library Class with BookNode Linked List.
+```cpp
+#include <iostream>
+#include <string>
+
+struct BookNode {
+    int id;
+    std::string title;
+    std::string author;
+    bool issued;
+    BookNode* next;
+};
+
+class Library {
+private:
+    BookNode* head;
+
+public:
+    // Constructor
+    Library() : head(nullptr) {}
+
+    // Destructor: Frees all nodes in the linked list
+    ~Library() {
+        BookNode* current = head;
+        while (current) {
+            BookNode* temp = current;
+            current = current->next;
+            delete temp;
+        }
+    }
+
+    // Add a new book to the end of the list
+    void addBook(int id, std::string title, std::string author) {
+        BookNode* newNode = new BookNode{id, title, author, false, nullptr};
+        if (!head) {
+            head = newNode;
+        } else {
+            BookNode* current = head;
+            while (current->next) {
+                current = current->next;
+            }
+            current->next = newNode;
+        }
+        std::cout << "Book added: " << title << std::endl;
+    }
+
+    // Issue a book by ID
+    void issueBook(int id) {
+        BookNode* current = head;
+        while (current) {
+            if (current->id == id) {
+                if (!current->issued) {
+                    current->issued = true;
+                    std::cout << "Book issued: " << current->title << std::endl;
+                } else {
+                    std::cout << "Book already issued: " << current->title << std::endl;
+                }
+                return;
+            }
+            current = current->next;
+        }
+        std::cout << "Book with ID " << id << " not found." << std::endl;
+    }
+
+    // Return a book by ID
+    void returnBook(int id) {
+        BookNode* current = head;
+        while (current) {
+            if (current->id == id) {
+                if (current->issued) {
+                    current->issued = false;
+                    std::cout << "Book returned: " << current->title << std::endl;
+                } else {
+                    std::cout << "Book was not issued: " << current->title << std::endl;
+                }
+                return;
+            }
+            current = current->next;
+        }
+        std::cout << "Book with ID " << id << " not found." << std::endl;
+    }
+
+    // Search for a book by title
+    void searchBook(std::string title) {
+        BookNode* current = head;
+        while (current) {
+            if (current->title == title) {
+                std::cout << "Book found - ID: " << current->id << ", Title: " << current->title
+                          << ", Author: " << current->author << ", Issued: " << (current->issued ? "Yes" : "No") << std::endl;
+                return;
+            }
+            current = current->next;
+        }
+        std::cout << "Book with title '" << title << "' not found." << std::endl;
+    }
+
+    // Display all books
+    void displayAll() {
+        if (!head) {
+            std::cout << "No books in the library." << std::endl;
+            return;
+        }
+        BookNode* current = head;
+        std::cout << "Library Books:" << std::endl;
+        while (current) {
+            std::cout << "ID: " << current->id << ", Title: " << current->title
+                      << ", Author: " << current->author << ", Issued: " << (current->issued ? "Yes" : "No") << std::endl;
+            current = current->next;
+        }
+    }
+};
+
+int main() {
+    Library lib;
+
+    // Add books
+    lib.addBook(1, "1984", "George Orwell");
+    lib.addBook(2, "To Kill a Mockingbird", "Harper Lee");
+    lib.addBook(3, "The Great Gatsby", "F. Scott Fitzgerald");
+
+    // Display all
+    lib.displayAll();
+
+    // Issue and return books
+    lib.issueBook(1);
+    lib.issueBook(1);  // Try issuing again
+    lib.returnBook(1);
+    lib.returnBook(1);  // Try returning again
+
+    // Search
+    lib.searchBook("1984");
+    lib.searchBook("Nonexistent Book");
+
+    // Display again
+    lib.displayAll();
+
+    // Destructor will clean up memory
+    return 0;
+}
+```
+INPUT/OUTPUT
+```
+Book added: 1984
+Book added: To Kill a Mockingbird
+Book added: The Great Gatsby
+Library Books:
+ID: 1, Title: 1984, Author: George Orwell, Issued: No
+ID: 2, Title: To Kill a Mockingbird, Author: Harper Lee, Issued: No
+ID: 3, Title: The Great Gatsby, Author: F. Scott Fitzgerald, Issued: No
+Book issued: 1984
+Book already issued: 1984
+Book returned: 1984
+Book was not issued: 1984
+Book found - ID: 1, Title: 1984, Author: George Orwell, Issued: No
+Book with title 'Nonexistent Book' not found.
+Library Books:
+ID: 1, Title: 1984, Author: George Orwell, Issued: No
+ID: 2, Title: To Kill a Mockingbird, Author: Harper Lee, Issued: No
+ID: 3, Title: The Great Gatsby, Author: F. Scott Fitzgerald, Issued: No
 ```
