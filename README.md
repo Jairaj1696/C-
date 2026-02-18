@@ -26,7 +26,7 @@ int main()
 ``` 
 
 # Create a Student class with attributes:name,roll number and marks. Add Member functions to input and display student details. Create at least 3 objects and display their data.
-```
+```cpp
 #include <iostream>
 using namespace std;
 class Student{
@@ -71,7 +71,7 @@ int main(){
 ```
 
 # Create a BankAccount class. Initialize account number and balance using a construcotr. Display a message when the destructor is called. Create objects inside a function to observe destructor behavior.
-```
+```cpp
 #include <iostream>
 using namespace std;
 class BankAccount{
