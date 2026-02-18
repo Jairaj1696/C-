@@ -26,6 +26,7 @@ int main()
 ``` 
 
 # Create a Student class with attributes:name,roll number and marks. Add Member functions to input and display student details. Create at least 3 objects and display their data.
+```
 #include <iostream>
 using namespace std;
 class Student{
@@ -67,9 +68,10 @@ int main(){
   s3.display();
   return 0;
 }
-
+```
 
 # Create a BankAccount class. Initialize account number and balance using a construcotr. Display a message when the destructor is called. Create objects inside a function to observe destructor behavior.
+```
 #include <iostream>
 using namespace std;
 class BankAccount{
@@ -114,4 +116,4 @@ int main(){
     
     return 0;
 }
-
+```
