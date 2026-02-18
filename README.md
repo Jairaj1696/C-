@@ -23,7 +23,17 @@ int main()
     return 0;
     
 }
-``` 
+```
+INPUT/OUTPUT
+```
+Enter The number b:-
+10
+Enter the number c:-
+20
+0x7fffdebe409410
+
+10
+```
 
 # 2.Create a Student class with attributes:name,roll number and marks. Add Member functions to input and display student details. Create at least 3 objects and display their data.
 ```cpp
