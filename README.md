@@ -1070,3 +1070,193 @@ Enter course code to list registered students: CS101
 Students registered in CS101:
   PANSHUL (Roll: 2)
 ```
+
+# Create a struct DirNode: 
+string name; bool isFile;
+DirNode* child; DirNode*
+sibling;Create a class DirectoryTree:
+createFolder(path), createFile(path)
+list(path)
+deleteNode(path)
+Implement using pointers (tree navigation) and free memory in destructor.
+```cpp
+#include <iostream>
+#include <sstream>
+#include <vector>
+using namespace std;
+
+struct DirNode {
+    string name;
+    bool isFile;
+    DirNode* child;
+    DirNode* sibling;
+
+    DirNode(string n, bool f) : name(n), isFile(f), child(nullptr), sibling(nullptr) {}
+};
+
+class DirectoryTree {
+private:
+    DirNode* root;
+
+    // split path
+    vector<string> split(const string& path) {
+        vector<string> parts;
+        string temp;
+        stringstream ss(path);
+        while (getline(ss, temp, '/')) {
+            if (!temp.empty())
+                parts.push_back(temp);
+        }
+        return parts;
+    }
+
+    // find child by name
+    DirNode* findChild(DirNode* parent, const string& name) {
+        DirNode* cur = parent->child;
+        while (cur) {
+            if (cur->name == name)
+                return cur;
+            cur = cur->sibling;
+        }
+        return nullptr;
+    }
+
+    // add child node
+    DirNode* addChild(DirNode* parent, string name, bool isFile) {
+        DirNode* node = new DirNode(name, isFile);
+        node->sibling = parent->child;
+        parent->child = node;
+        return node;
+    }
+
+    // recursive delete subtree
+    void freeSubtree(DirNode* node) {
+        if (!node) return;
+        freeSubtree(node->child);
+        freeSubtree(node->sibling);
+        delete node;
+    }
+
+    // navigate to node by path
+    DirNode* navigate(const string& path) {
+        vector<string> parts = split(path);
+        DirNode* cur = root;
+        for (auto& p : parts) {
+            cur = findChild(cur, p);
+            if (!cur) return nullptr;
+        }
+        return cur;
+    }
+
+public:
+    DirectoryTree() {
+        root = new DirNode("root", false);
+    }
+
+    ~DirectoryTree() {
+        freeSubtree(root);
+    }
+
+    void createFolder(string path) {
+        vector<string> parts = split(path);
+        DirNode* cur = root;
+
+        for (auto& p : parts) {
+            DirNode* next = findChild(cur, p);
+            if (!next)
+                next = addChild(cur, p, false);
+            cur = next;
+        }
+    }
+
+    void createFile(string path) {
+        vector<string> parts = split(path);
+        DirNode* cur = root;
+
+        for (int i = 0; i < parts.size() - 1; i++) {
+            DirNode* next = findChild(cur, parts[i]);
+            if (!next)
+                next = addChild(cur, parts[i], false);
+            cur = next;
+        }
+
+        if (!findChild(cur, parts.back()))
+            addChild(cur, parts.back(), true);
+    }
+
+    void list(string path) {
+        DirNode* dir = (path == "/" ? root : navigate(path));
+        if (!dir) {
+            cout << "Path not found\n";
+            return;
+        }
+
+        DirNode* cur = dir->child;
+        while (cur) {
+            cout << (cur->isFile ? "[F] " : "[D] ") << cur->name << endl;
+            cur = cur->sibling;
+        }
+    }
+
+    void deleteNode(string path) {
+        vector<string> parts = split(path);
+        if (parts.empty()) return;
+
+        DirNode* parent = root;
+        for (int i = 0; i < parts.size() - 1; i++) {
+            parent = findChild(parent, parts[i]);
+            if (!parent) return;
+        }
+
+        string target = parts.back();
+        DirNode* cur = parent->child;
+        DirNode* prev = nullptr;
+
+        while (cur && cur->name != target) {
+            prev = cur;
+            cur = cur->sibling;
+        }
+
+        if (!cur) {
+            cout << "Node not found\n";
+            return;
+        }
+
+        if (prev)
+            prev->sibling = cur->sibling;
+        else
+            parent->child = cur->sibling;
+
+        cur->sibling = nullptr;
+        freeSubtree(cur);
+    }
+};
+
+int main() {
+    DirectoryTree dt;
+
+    dt.createFolder("/docs");
+    dt.createFolder("/docs/projects");
+    dt.createFile("/docs/projects/code.cpp");
+    dt.createFile("/docs/readme.txt");
+
+    cout << "\nList /docs:\n";
+    dt.list("/docs");
+
+    dt.deleteNode("/docs/readme.txt");
+
+    cout << "\nAfter delete:\n";
+    dt.list("/docs");
+
+    return 0;
+}
+```
+INPUT/OUTPUT
+```
+List /docs:
+[D] projects
+[F] readme.txt
+
+After delete:
+[D] projects
+```
