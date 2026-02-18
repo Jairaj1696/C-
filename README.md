@@ -1,6 +1,6 @@
 # C++ CODES 
 
-# Create a Student class with attributes:name,roll number and marks. Add Member functions to input and display student details. Create at least 3 objects and display their data.
+# Creating a Student class with attributes: name, roll number, and marks and performing certain operations.
 ```cpp
 #include <iostream>
 using namespace std;
