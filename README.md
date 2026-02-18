@@ -749,3 +749,359 @@ ID: 1, Title: 1984, Author: George Orwell, Issued: No
 ID: 2, Title: To Kill a Mockingbird, Author: Harper Lee, Issued: No
 ID: 3, Title: The Great Gatsby, Author: F. Scott Fitzgerald, Issued: No
 ```
+
+# BankAccount Class with Transaction Linked List.
+```cpp
+
+#include <iostream>
+#include <string>
+
+struct Transaction {
+    std::string type;  // "Deposit" or "Withdraw"
+    double amount;
+    std::string date;
+    Transaction* next;
+};
+
+class BankAccount {
+private:
+    int accountNo;
+    std::string holderName;
+    double balance;
+    Transaction* historyHead;
+
+public:
+    // Constructor
+    BankAccount(int accNo, std::string name, double initialBalance = 0.0)
+        : accountNo(accNo), holderName(name), balance(initialBalance), historyHead(nullptr) {}
+
+    // Destructor: Frees all transaction nodes
+    ~BankAccount() {
+        Transaction* current = historyHead;
+        while (current) {
+            Transaction* temp = current;
+            current = current->next;
+            delete temp;
+        }
+    }
+
+    // Deposit money and add to history
+    void deposit(double amount, std::string date) {
+        balance += amount;
+        addTransaction("Deposit", amount, date);
+        std::cout << "Deposited $" << amount << " on " << date << ". New balance: $" << balance << std::endl;
+    }
+
+    // Withdraw money (if sufficient balance) and add to history
+    void withdraw(double amount, std::string date) {
+        if (amount > balance) {
+            std::cout << "Insufficient balance. Cannot withdraw $" << amount << "." << std::endl;
+            return;
+        }
+        balance -= amount;
+        addTransaction("Withdraw", amount, date);
+        std::cout << "Withdrew $" << amount << " on " << date << ". New balance: $" << balance << std::endl;
+    }
+
+    // Show transaction history
+    void showHistory() const {
+        if (!historyHead) {
+            std::cout << "No transactions for account " << accountNo << "." << std::endl;
+            return;
+        }
+        Transaction* current = historyHead;
+        std::cout << "Transaction History for " << holderName << " (Account " << accountNo << "):" << std::endl;
+        while (current) {
+            std::cout << current->type << " $" << current->amount << " on " << current->date << std::endl;
+            current = current->next;
+        }
+    }
+
+    // Show current balance
+    void showBalance() const {
+        std::cout << "Account " << accountNo << " (" << holderName << ") Balance: $" << balance << std::endl;
+    }
+
+    // Getters for searching
+    int getAccountNo() const { return accountNo; }
+    std::string getHolderName() const { return holderName; }
+
+private:
+    // Helper to add a transaction to the history list
+    void addTransaction(std::string type, double amount, std::string date) {
+        Transaction* newTrans = new Transaction{type, amount, date, nullptr};
+        if (!historyHead) {
+            historyHead = newTrans;
+        } else {
+            Transaction* current = historyHead;
+            while (current->next) {
+                current = current->next;
+            }
+            current->next = newTrans;
+        }
+    }
+};
+
+int main() {
+    const int NUM_ACCOUNTS = 3;
+    BankAccount** accounts = new BankAccount*[NUM_ACCOUNTS];
+
+    // Create accounts
+    accounts[0] = new BankAccount(1001, "Alice", 1000.0);
+    accounts[1] = new BankAccount(1002, "Bob", 500.0);
+    accounts[2] = new BankAccount(1003, "Charlie", 2000.0);
+
+    // Perform operations on accounts
+    accounts[0]->deposit(500.0, "2023-10-01");
+    accounts[0]->withdraw(200.0, "2023-10-02");
+    accounts[1]->withdraw(600.0, "2023-10-03");  // Insufficient balance
+    accounts[2]->deposit(1000.0, "2023-10-04");
+
+    // Show balances
+    for (int i = 0; i < NUM_ACCOUNTS; ++i) {
+        accounts[i]->showBalance();
+    }
+
+    // Show history for one account
+    accounts[0]->showHistory();
+
+    // Search for an account by number
+    int searchAcc = 1002;
+    bool found = false;
+    for (int i = 0; i < NUM_ACCOUNTS; ++i) {
+        if (accounts[i]->getAccountNo() == searchAcc) {
+            std::cout << "Found account: " << accounts[i]->getHolderName() << std::endl;
+            accounts[i]->showHistory();
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        std::cout << "Account " << searchAcc << " not found." << std::endl;
+    }
+
+    // Free memory: Delete each account (destructor handles transactions), then the array
+    for (int i = 0; i < NUM_ACCOUNTS; ++i) {
+        delete accounts[i];
+    }
+    delete[] accounts;
+
+    return 0;
+}
+```
+INPUT/OUTPUT
+```
+Deposited $500.00 on 2023-10-01. New balance: $1500.00
+Withdrew $200.00 on 2023-10-02. New balance: $1300.00
+Insufficient balance. Cannot withdraw $600.00.
+Deposited $1000.00 on 2023-10-04. New balance: $3000.00
+Account 1001 (Alice) Balance: $1300.00
+Account 1002 (Bob) Balance: $500.00
+Account 1003 (Charlie) Balance: $3000.00
+Transaction History for Alice (Account 1001):
+Deposit $500.00 on 2023-10-01
+Withdraw $200.00 on 2023-10-02
+Found account: Bob
+Transaction History for Bob (Account 1002):
+No transactions for account 1002.
+```
+
+# Student Class with Dynamic Course Registration.
+```cpp
+#include <iostream>
+#include <string>
+
+struct Course {
+    std::string courseCode;
+    std::string courseName;
+    int credits;
+};
+
+class Student {
+private:
+    int roll;
+    std::string name;
+    Course* registeredCourses;
+    int numCourses;
+    int capacity;  // For dynamic array growth
+
+public:
+    // Constructor: Initializes with empty course list
+    Student(int r, std::string nm) : roll(r), name(nm), numCourses(0), capacity(2) {
+        registeredCourses = new Course[capacity];
+    }
+
+    // Destructor: Frees dynamic course array
+    ~Student() {
+        delete[] registeredCourses;
+    }
+
+    // Register courses: Input multiple courses and add to dynamic array
+    void registerCourses() {
+        int n;
+        std::cout << "Enter number of courses to register for " << name << ": ";
+        std::cin >> n;
+        for (int i = 0; i < n; ++i) {
+            if (numCourses == capacity) {
+                // Grow array
+                capacity *= 2;
+                Course* newArray = new Course[capacity];
+                for (int j = 0; j < numCourses; ++j) {
+                    newArray[j] = registeredCourses[j];
+                }
+                delete[] registeredCourses;
+                registeredCourses = newArray;
+            }
+            std::cout << "Enter course code: ";
+            std::cin >> registeredCourses[numCourses].courseCode;
+            std::cout << "Enter course name: ";
+            std::cin.ignore();  // Handle newline
+            std::getline(std::cin, registeredCourses[numCourses].courseName);
+            std::cout << "Enter credits: ";
+            std::cin >> registeredCourses[numCourses].credits;
+            ++numCourses;
+        }
+    }
+
+    // Drop a course by code
+    void dropCourse(std::string code) {
+        for (int i = 0; i < numCourses; ++i) {
+            if (registeredCourses[i].courseCode == code) {
+                // Shift elements left
+                for (int j = i; j < numCourses - 1; ++j) {
+                    registeredCourses[j] = registeredCourses[j + 1];
+                }
+                --numCourses;
+                std::cout << "Dropped course: " << code << std::endl;
+                return;
+            }
+        }
+        std::cout << "Course " << code << " not found for " << name << std::endl;
+    }
+
+    // Show all registered courses
+    void showCourses() const {
+        std::cout << name << "'s courses:" << std::endl;
+        if (numCourses == 0) {
+            std::cout << "  No courses registered." << std::endl;
+            return;
+        }
+        for (int i = 0; i < numCourses; ++i) {
+            std::cout << "  " << registeredCourses[i].courseCode << " - " << registeredCourses[i].courseName
+                      << " (" << registeredCourses[i].credits << " credits)" << std::endl;
+        }
+    }
+
+    // Total credits
+    int totalCredits() const {
+        int total = 0;
+        for (int i = 0; i < numCourses; ++i) {
+            total += registeredCourses[i].credits;
+        }
+        return total;
+    }
+
+    // Check if student is registered in a course
+    bool isRegisteredIn(std::string code) const {
+        for (int i = 0; i < numCourses; ++i) {
+            if (registeredCourses[i].courseCode == code) return true;
+        }
+        return false;
+    }
+
+    // Getters
+    int getRoll() const { return roll; }
+    std::string getName() const { return name; }
+};
+
+int main() {
+    int N;
+    std::cout << "Enter number of students: ";
+    std::cin >> N;
+
+    // Dynamic array of student pointers
+    Student** students = new Student*[N];
+
+    for (int i = 0; i < N; ++i) {
+        int roll;
+        std::string name;
+        std::cout << "\nEnter roll and name for Student " << (i + 1) << ": ";
+        std::cin >> roll >> name;
+        students[i] = new Student(roll, name);
+        students[i]->registerCourses();
+    }
+
+    // Display all students
+    std::cout << "\nAll Students:" << std::endl;
+    for (int i = 0; i < N; ++i) {
+        students[i]->showCourses();
+        std::cout << "Total Credits: " << students[i]->totalCredits() << std::endl;
+        std::cout << "-------------------" << std::endl;
+    }
+
+    // Print students registered in a given course
+    std::string courseCode;
+    std::cout << "Enter course code to list registered students: ";
+    std::cin >> courseCode;
+    std::cout << "Students registered in " << courseCode << ":" << std::endl;
+    bool found = false;
+    for (int i = 0; i < N; ++i) {
+        if (students[i]->isRegisteredIn(courseCode)) {
+            std::cout << "  " << students[i]->getName() << " (Roll: " << students[i]->getRoll() << ")" << std::endl;
+            found = true;
+        }
+    }
+    if (!found) {
+        std::cout << "  No students registered." << std::endl;
+    }
+
+    // Free memory
+    for (int i = 0; i < N; ++i) {
+        delete students[i];
+    }
+    delete[] students;
+
+    return 0;
+}
+```
+INPUT/OUTPUT
+```
+Enter number of students: 2
+
+Enter roll and name for Student 1: 1 JAIRAJ
+Enter number of courses to register for JAIRAJ: 2
+Enter course code: 25570063
+Enter course name: ENGLISH HONS
+Enter credits: 5
+Enter course code: MA102
+Enter course name: Calculus
+Enter credits: 8
+
+Enter roll and name for Student 2: 2 PANSHUL
+Enter number of courses to register for PANSHUL: 3
+Enter course code: CS101
+Enter course name: Programming Fundamentals
+Enter credits: 6
+Enter course code: PH103
+Enter course name: Physics
+Enter credits: 6
+Enter course code: EN104
+Enter course name: English
+Enter credits: 4
+
+All Students:
+JAIRAJ's courses:
+  25570063 - ENGLISH HONS (5 credits)
+  MA102 - Calculus (8 credits)
+Total Credits: 13
+-------------------
+PANSHUL's courses:
+  CS101 - Programming Fundamentals (6 credits)
+  PH103 - Physics (6 credits)
+  EN104 - English (4 credits)
+Total Credits: 16
+-------------------
+Enter course code to list registered students: CS101
+Students registered in CS101:
+  PANSHUL (Roll: 2)
+```
