@@ -1,41 +1,6 @@
 # C++ CODES 
-# 1.
-```cpp
-#include <iostream>
-using namespace std;
-int main()
-{
-    int *a;
-    int b;
-    int c;
-    cout<< "Enter The number b:-"<< endl;
-    cin>>b;
-    cout<<"Enter the number c:-"<< endl;
-    cin>>c;
-    
-    a=&b;
-    c=*a;
-    
-    cout<< a;
-    cout<<b;
-    cout<< "\n" << endl;
-    cout<<c;
-    return 0;
-    
-}
-```
-INPUT/OUTPUT
-```
-Enter The number b:-
-10
-Enter the number c:-
-20
-0x7fffdebe409410
 
-10
-```
-
-# 2.Create a Student class with attributes:name,roll number and marks. Add Member functions to input and display student details. Create at least 3 objects and display their data.
+# Create a Student class with attributes:name,roll number and marks. Add Member functions to input and display student details. Create at least 3 objects and display their data.
 ```cpp
 #include <iostream>
 using namespace std;
@@ -109,7 +74,7 @@ Marks: 78
 -------------------
 ```
 
-# 3. Creating a BankAccount Class with Constructor and Destructor.
+# Creating a BankAccount Class with Constructor and Destructor.
 ```cpp
 #include <iostream>
 using namespace std;
@@ -167,7 +132,7 @@ Destructor called for account 12345
 Back in main. Program ending.
 ```
 
-# 4. Creating an Employee class with private specifier and validation.
+# Creating an Employee class with private specifier and validation.
 ```cpp
 #include <iostream>
 using namespace std;
@@ -224,7 +189,7 @@ Name: Bob
 Salary: $45000.00
 ```
 
-# 5. Creating a class Calculator and using method overloading.
+# Creating a class Calculator and using method overloading.
 ```cpp
 #include <iostream>
 using namespace std;
@@ -278,7 +243,7 @@ Enter three integers: 1 2 3
 Sum (three ints): 6
 ```
 
-# 6. Student Class with Dynamic Subjects Array using Struct.
+# Student Class with Dynamic Subjects Array using Struct.
 ```cpp
 #include <iostream>
 #include <string>
