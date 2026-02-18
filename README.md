@@ -1,5 +1,6 @@
 # C++ CODES 
 1.// Online C++ compiler to run C++ program online
+```cpp
 #include <iostream>
 using namespace std;
 int main()
@@ -21,7 +22,8 @@ int main()
     cout<<c;
     return 0;
     
-} 
+}
+``` 
 
 # Create a Student class with attributes:name,roll number and marks. Add Member functions to input and display student details. Create at least 3 objects and display their data.
 #include <iostream>
