@@ -120,5 +120,43 @@ int main(){
 # Create an employee class. Make a salary private. Provide getter and setter functions. Add validation: salary cannot be negative
 ```cpp
 #include <iostream>
+using namespace std;
+
+class Employee {
+private:
+    double salary;
+public:
+    // Constructor
+    Employee(double s = 0) {
+        setSalary(s);
+    }
+
+    // Setter with validation
+    void setSalary(double s) {
+        if (s < 0) {
+            cout << "Error: Salary cannot be negative." << endl;
+        } else {
+            salary = s;
+        }
+    }
+
+    // Getter
+    double getSalary() const {
+        return salary;
+    }
+};
+
+int main() {
+    Employee emp;
+
+    emp.setSalary(50000);
+    cout << "Salary: " << emp.getSalary() << endl;
+
+    emp.setSalary(-1000); // invalid
+    cout << "Salary after invalid update: " << emp.getSalary() << endl;
+
+    return 0;
+}
 
 ```
+
