@@ -160,3 +160,47 @@ int main() {
 
 ```
 
+# Create a class Calculator. Overload a function add() for : int, double, three integers.
+```cpp
+#include <iostream>
+using namespace std;
+
+class Calculator {
+public:
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    double add(double a, double b) {
+        return a + b;
+    }
+
+    int add(int a, int b, int c) {
+        return a + b + c;
+    }
+};
+
+int main() {
+    Calculator calc;
+
+    int x, y, z;
+    double d1, d2;
+
+    // two integers
+    cout << "Enter two integers: ";
+    cin >> x >> y;
+    cout << "Sum (int): " << calc.add(x, y) << endl;
+
+    // two doubles
+    cout << "Enter two doubles: ";
+    cin >> d1 >> d2;
+    cout << "Sum (double): " << calc.add(d1, d2) << endl;
+
+    // three integers
+    cout << "Enter three integers: ";
+    cin >> x >> y >> z;
+    cout << "Sum (three ints): " << calc.add(x, y, z) << endl;
+
+    return 0;
+}
+```
