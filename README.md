@@ -79,6 +79,35 @@ int main(){
   return 0;
 }
 ```
+INPUT/OUTPUT
+```
+Enter details for Student 1:
+Enter name: Alice
+Enter roll number: 101
+Enter marks: 85
+Enter details for Student 2:
+Enter name: Bob
+Enter roll number: 102
+Enter marks: 92
+Enter details for Student 3:
+Enter name: Charlie
+Enter roll number: 103
+Enter marks: 78
+
+Displaying student details:
+Name: Alice
+Roll Number: 101
+Marks: 85
+-------------------
+Name: Bob
+Roll Number: 102
+Marks: 92
+-------------------
+Name: Charlie
+Roll Number: 103
+Marks: 78
+-------------------
+```
 
 # 3. Create a BankAccount class. Initialize account number and balance using a construcotr. Display a message when the destructor is called. Create objects inside a function to observe destructor behavior.
 ```cpp
