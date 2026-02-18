@@ -1,5 +1,5 @@
 # C++ CODES 
-1.// Online C++ compiler to run C++ program online
+# 1.// Online C++ compiler to run C++ program online
 ```cpp
 #include <iostream>
 using namespace std;
@@ -25,7 +25,7 @@ int main()
 }
 ``` 
 
-# Create a Student class with attributes:name,roll number and marks. Add Member functions to input and display student details. Create at least 3 objects and display their data.
+# 2.Create a Student class with attributes:name,roll number and marks. Add Member functions to input and display student details. Create at least 3 objects and display their data.
 ```cpp
 #include <iostream>
 using namespace std;
@@ -70,7 +70,7 @@ int main(){
 }
 ```
 
-# Create a BankAccount class. Initialize account number and balance using a construcotr. Display a message when the destructor is called. Create objects inside a function to observe destructor behavior.
+# 3. Create a BankAccount class. Initialize account number and balance using a construcotr. Display a message when the destructor is called. Create objects inside a function to observe destructor behavior.
 ```cpp
 #include <iostream>
 using namespace std;
@@ -117,7 +117,7 @@ int main(){
     return 0;
 }
 ```
-# Create an employee class. Make a salary private. Provide getter and setter functions. Add validation: salary cannot be negative
+# 4. Create an employee class. Make a salary private. Provide getter and setter functions. Add validation: salary cannot be negative
 ```cpp
 #include <iostream>
 using namespace std;
@@ -160,7 +160,7 @@ int main() {
 
 ```
 
-# Create a class Calculator. Overload a function add() for : int, double, three integers.
+# 5. Create a class Calculator. Overload a function add() for : int, double, three integers.
 ```cpp
 #include <iostream>
 using namespace std;
