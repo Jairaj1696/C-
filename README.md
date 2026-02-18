@@ -65,3 +65,51 @@ int main(){
   s3.display();
   return 0;
 }
+
+
+# Create a BankAccount class. Initialize account number and balance using a construcotr. Display a message when the destructor is called. Create objects inside a function to observe destructor behavior.
+#include <iostream>
+using namespace std;
+class BankAccount{
+    private:
+        int accountNumber;
+        double balance;
+    public :
+        //Constructor
+        BankAccount(int accNo,double bal){
+            accountNumber=accNo;
+            balance=bal;
+            cout<<"Constructor called for Account No :"<<accountNumber<<endl;
+            
+        }
+        //Distructor
+        BankAccount(){
+            cout<<"Distructor called for Account No;"<<accountNumber<<endl;
+            
+        }
+        //Display function
+        void display(){
+            cout<<"Account Number:"<<accountNumber<<endl;
+            cout<<"Balance :"<<balance<<endl;
+        }
+};
+//Function to create objects
+void createAccounts(){
+    BankAccount acc1(101,5000.50);
+    BankAccount acc2(102,10000.75);
+    BankAccount acc3(103,696969.69);
+    cout<<"\nInside createAccounts() function \n";
+    acc1.display();
+    acc2.display();
+    acc3.display();
+    cout<<"Exiting createAccounts() function....\n";
+};
+int main(){
+    
+    cout<<"Entering main()\n";
+    createAccounts();
+
+    
+    return 0;
+}
+
